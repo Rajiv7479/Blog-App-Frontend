@@ -1,0 +1,33 @@
+.container {
+  position: relative;
+  max-width: 1024px;
+  margin-top: 150px;
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+}
+.postContainer {
+  background-color: antiquewhite;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+/* .postContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  position: absolute;
+  justify-content: center;
+} */
+
+.post {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+}
