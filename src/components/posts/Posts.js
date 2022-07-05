@@ -22,6 +22,22 @@ import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Link } from "react-router-dom";
+import {
+  EmailIcon,
+  EmailShareButton,
+  FacebookIcon,
+  FacebookShareButton,
+  FacebookShareCount,
+  InstapaperIcon,
+  InstapaperShareButton,
+  TelegramIcon,
+  TelegramShareButton,
+  TwitterIcon,
+  TwitterShareButton,
+  WhatsappIcon,
+  WhatsappShareButton,
+} from "react-share";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -35,60 +51,65 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function RecipeReviewCard({ post }) {
-  const [expanded, setExpanded] = React.useState(false);
+  const [share, setShare] = useState(false);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
+  const shareHandler = () => {
+    setShare(!share);
   };
+  // const [expanded, setExpanded] = React.useState(false);
 
-  //submitComment
-  const [cmnt, setCmnt] = useState("");
-  const [allComments, setAllComments] = useState([]);
-  const commentHandler = (e) => {
-    const value = e.target.value;
-    setCmnt(value);
-  };
+  // const handleExpandClick = () => {
+  //   setExpanded(!expanded);
+  // };
 
-  // console.log(allComments);
-  const curr_user = JSON.parse(localStorage.getItem("user"));
-  const submitComment = async (e) => {
-    e.preventDefault();
-    await axios.post("http://localhost:5000/posts/api/comments", {
-      author: curr_user.data.result.fullname,
-      id: post._id,
-      comment: cmnt,
-    });
-    setCmnt(" ");
-  };
+  // //submitComment
+  // const [cmnt, setCmnt] = useState("");
+  // const [allComments, setAllComments] = useState([]);
+  // const commentHandler = (e) => {
+  //   const value = e.target.value;
+  //   setCmnt(value);
+  // };
 
-  //const allComments = axios.get("http://localhost:5000/posts/api/comments");
+  // // console.log(allComments);
+  // const curr_user = JSON.parse(localStorage.getItem("user"));
+  // const submitComment = async (e) => {
+  //   e.preventDefault();
+  //   await axios.post("https://blog-app2k22.herokuapp.com/posts/api/comments", {
+  //     author: curr_user.data.result.fullname,
+  //     id: post._id,
+  //     comment: cmnt,
+  //   });
+  //   setCmnt(" ");
+  // };
 
-  useEffect(() => {
-    const fetchComment = async () => {
-      try {
-        await axios
-          .get("http://localhost:5000/posts/api/comments")
-          .then((res) => {
-            setAllComments(res.data);
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  // //const allComments = axios.get("http://localhost:5000/posts/api/comments");
 
-    fetchComment();
+  // useEffect(() => {
+  //   const fetchComment = async () => {
+  //     try {
+  //       await axios
+  //         .get("https://blog-app2k22.herokuapp.com/posts/api/comments")
+  //         .then((res) => {
+  //           setAllComments(res.data);
+  //         });
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
-    //console.log(allComments);
-  }, [allComments]);
+  //   fetchComment();
 
-  //deleteIcon
-  const deletePost = async () => {
-    await axios.delete(`http://localhost:5000/posts/${post._id}`);
-  };
+  //   //console.log(allComments);
+  // }, [allComments]);
 
   const [deleteIcon, setDeleteIcon] = useState(false);
-
   const user = JSON.parse(localStorage.getItem("user"));
+  const URL = `https://sri-blog-web-app.netlify.app/post/${post._id}`;
+
+  //DELETE ICON
+  const deletePost = async () => {
+    await axios.delete(`https://blog-app2k22.herokuapp.com/posts/${post._id}`);
+  };
 
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -99,58 +120,85 @@ export default function RecipeReviewCard({ post }) {
           </Avatar>
         }
         action={
-          <IconButton
-            aria-label="settings"
-            onClick={() => setDeleteIcon(!deleteIcon)}
-          >
-            {deleteIcon ? (
-              <DeleteIcon onClick={deletePost} />
-            ) : (
-              <MoreVertIcon />
-            )}
-          </IconButton>
+          user ? (
+            user.data.result.fullname === post.author ? (
+              <IconButton
+                aria-label="settings"
+                onClick={() => setDeleteIcon(!deleteIcon)}
+              >
+                {deleteIcon ? (
+                  <DeleteIcon onClick={deletePost} />
+                ) : (
+                  <MoreVertIcon />
+                )}
+              </IconButton>
+            ) : null
+          ) : null
         }
         title={post.title}
         subheader={`author :- ${post.author}`}
       />
+      <Link to={`/post/${post._id}`} className="linkstyle">
+        <CardMedia
+          component="img"
+          height="194"
+          image={post.image}
+          alt={post.title}
+        />
+        <CardContent>
+          <Typography variant="body2" color="text.secondary">
+            {post.shortDesc.slice(0, 150)}...
+          </Typography>
+        </CardContent>
+      </Link>
 
-      <CardMedia
-        component="img"
-        height="194"
-        image={post.image}
-        alt={post.title}
-      />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {post.shortDesc.slice(0, 150)}...
-        </Typography>
-      </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />
         </IconButton>
-        <IconButton aria-label="share">
+        <IconButton aria-label="share" onClick={shareHandler}>
           <ShareIcon />
         </IconButton>
-        <ExpandMore
+        {share && (
+          <div className="shareIconBox">
+            <FacebookShareButton url={URL}>
+              <FacebookIcon size={25} round={true} />
+            </FacebookShareButton>
+            <WhatsappShareButton url={URL}>
+              <WhatsappIcon size={25} round={true} />
+            </WhatsappShareButton>
+            <TwitterShareButton url={URL}>
+              <TwitterIcon size={25} round={true} />
+            </TwitterShareButton>
+            <TelegramShareButton url={URL}>
+              <TelegramIcon size={25} round={true} />
+            </TelegramShareButton>
+            <EmailShareButton url={URL}>
+              <EmailIcon size={25} round={true} />
+            </EmailShareButton>
+          </div>
+        )}
+      </CardActions>
+
+      {/* <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
           aria-expanded={expanded}
           aria-label="show more"
         >
           <ExpandMoreIcon />
-        </ExpandMore>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
+      </ExpandMore> */}
+
+      {/*<Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>Details:</Typography>
           <Typography paragraph>{post.desc}</Typography>
 
-          {/* Comments section  */}
-          <hr />
+          {/* Comments section  
+        
           <Typography paragraph>Comments:</Typography>
 
-          {user && (
+           {user && (
             <div className="commentBox">
               <TextField
                 id="outlined-size-small"
@@ -176,9 +224,9 @@ export default function RecipeReviewCard({ post }) {
             </div>
           )}
           <br />
-          <br />
+          <br /> 
 
-          {allComments.map((comment) => {
+         {allComments.map((comment) => {
             return post._id === comment.commentId ? (
               <Card sx={{ minWidth: 275 }} key={comment._id}>
                 <CardContent>
@@ -198,36 +246,9 @@ export default function RecipeReviewCard({ post }) {
                 </CardContent>
               </Card>
             ) : null;
-          })}
-
-          {/* <Typography paragraph>
-            Heat 1/2 cup of the broth in a pot until simmering, add saffron and
-            set aside for 10 minutes.
-          </Typography>
-          <Typography paragraph>
-            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet
-            over medium-high heat. Add chicken, shrimp and chorizo, and cook,
-            stirring occasionally until lightly browned, 6 to 8 minutes.
-            Transfer shrimp to a large plate and set aside, leaving chicken and
-            chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes,
-            onion, salt and pepper, and cook, stirring often until thickened and
-            fragrant, about 10 minutes. Add saffron broth and remaining 4 1/2
-            cups chicken broth; bring to a boil.
-          </Typography>
-          <Typography paragraph>
-            Add rice and stir very gently to distribute. Top with artichokes and
-            peppers, and cook without stirring, until most of the liquid is
-            absorbed, 15 to 18 minutes. Reduce heat to medium-low, add reserved
-            shrimp and mussels, tucking them down into the rice, and cook again
-            without stirring, until mussels have opened and rice is just tender,
-            5 to 7 minutes more. (Discard any mussels that don&apos;t open.)
-          </Typography>
-          <Typography>
-            Set aside off of the heat to let rest for 10 minutes, and then
-            serve. 
-           </Typography> */}
-        </CardContent>
-      </Collapse>
+          })} 
+        </CardContent> 
+       </Collapse> */}
     </Card>
   );
 }

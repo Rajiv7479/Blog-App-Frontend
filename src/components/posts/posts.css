@@ -3,3 +3,10 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.linkstyle {
+  text-decoration: none;
+}
+
+.shareIconBox {
+}

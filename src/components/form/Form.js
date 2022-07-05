@@ -29,22 +29,29 @@ export default function MediaCard() {
   const postData = async (e) => {
     e.preventDefault();
     const { title, author, desc, shortDesc, image } = formData;
+    try {
+      if (title && author && desc && shortDesc && image) {
+        await axios.post("https://blog-app2k22.herokuapp.com/posts", {
+          title: title,
+          author: author,
+          image: image,
+          shortDesc: shortDesc,
+          desc: desc,
+        });
+      } else {
+        alert("Please,Fill all the required field !!!");
+      }
 
-    await axios.post("http://localhost:5000/posts", {
-      title: title,
-      author: author,
-      image: image,
-      shortDesc: shortDesc,
-      desc: desc,
-    });
-
-    setFormData({
-      title: "",
-      author: "",
-      desc: "",
-      shortDesc: "",
-      image: "",
-    });
+      setFormData({
+        title: "",
+        author: "",
+        desc: "",
+        shortDesc: "",
+        image: "",
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -52,7 +59,7 @@ export default function MediaCard() {
   return (
     <>
       {user && (
-        <Card sx={{ maxWidth: 400 }}>
+        <Card sx={{ maxWidth: 400 }} className="form">
           <Typography gutterBottom variant="h5" component="div">
             Create a Blog
           </Typography>
@@ -89,6 +96,8 @@ export default function MediaCard() {
               value={formData.shortDesc}
               onChange={handelInput}
               name="shortDesc"
+              multiline="true"
+              minRows="2"
               // defaultValue="Hello World"
             />
           </CardContent>

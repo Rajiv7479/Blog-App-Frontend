@@ -2,19 +2,22 @@ import React from "react";
 import "./home.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Grid, Grow } from "@mui/material";
+import { CircularProgress, Container, Grid, Grow } from "@mui/material";
 import Form from "../../components/form/Form";
 import Navbar from "../../components/navbar/Navbar";
 import Posts from "../../components/posts/Posts";
 import Footer from "../../components/footer/Footer";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     async function fetchData() {
-      await axios.get("http://localhost:5000/posts").then((res) => {
-        setPosts(res.data);
-      });
+      await axios
+        .get("https://blog-app2k22.herokuapp.com/posts")
+        .then((res) => {
+          setPosts(res.data);
+        });
     }
     fetchData();
   }, [posts]);
@@ -53,7 +56,9 @@ const Home = () => {
                     );
                   })
                 ) : (
-                  <h1>No Post Found!!!</h1>
+                  <h2>
+                    Loading.... <CircularProgress />
+                  </h2>
                 )}
               </Grid>
 

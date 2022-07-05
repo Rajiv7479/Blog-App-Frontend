@@ -5,3 +5,11 @@
   text-align: center;
   margin: 50 50;
 }
+.form {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 100%;
+  height: fit-content;
+  padding-bottom: 10px;
+}

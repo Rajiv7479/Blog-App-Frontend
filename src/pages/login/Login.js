@@ -39,14 +39,19 @@ export default function Login() {
     if (!isLogin) {
       try {
         if (username && email && password && fullname) {
-          await axios.post("http://localhost:5000/register", formData);
+          await axios.post(
+            "https://blog-app2k22.herokuapp.com/user/register",
+            formData
+          );
           navigate("/login");
-          console.log(formData);
+          alert("Sign Up Successfully!!");
+
+          // console.log(formData);
         } else {
-          console.log("Please fill  all required filled!!!!");
+          alert("Please fill  all required filled!!!!");
         }
       } catch (error) {
-        console.log("Username already exist!!", error);
+        alert("Username already exist!!", error);
       }
       setFormData(initialData);
     }
@@ -54,13 +59,16 @@ export default function Login() {
     else {
       try {
         if (formData.username && formData.password) {
-          let user = await axios.post("http://localhost:5000/login", formData);
-          console.log(user);
+          let user = await axios.post(
+            "https://blog-app2k22.herokuapp.com/user/login",
+            formData
+          );
+          //console.log(user);
           // setformData(initialData);
           setFormData(initialData);
           localStorage.setItem("user", JSON.stringify(user));
           navigate("/");
-        }
+        } else alert("Please fill the required Field!!!");
       } catch (error) {
         alert("User not found!!");
         setFormData(initialData);
@@ -85,8 +93,8 @@ export default function Login() {
   return (
     <>
       <Navbar />
-      <div className="loginPage">
-        <Card sx={{ minWidth: 500 }} className="loginItems">
+      <Container container className="loginPage">
+        <Card sx={{ minWidth: 600 }} className="loginItems">
           <CardContent className="loginItems">
             <Typography
               sx={{ fontSize: 34 }}
@@ -172,7 +180,7 @@ export default function Login() {
             </p>
           )}
         </Card>
-      </div>
+      </Container>
     </>
   );
 }
